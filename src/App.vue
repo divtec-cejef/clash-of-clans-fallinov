@@ -41,17 +41,68 @@ const troupes = ref([
 </script>
 
 <template>
-  <h1>Clash Of Clans</h1>
-  <ul>
-    <li
-        v-for="troupe in troupes"
-        :key="troupe.id"
-        :style="`background-color: ${troupe.couleur};`"
-    >
-      {{ troupe.nom }}
-      <img :src="troupe.image" :alt="troupe.nom">
-    </li>
-  </ul>
+  <aside class="solde-or">
+    <div>
+      <img src="/img/piece-or-note.jpg" alt="Solde Or">
+      20 000 pièces d'or
+    </div>
+    <div>
+      <img src="/img/troupes-icon.png" alt="Troupes">
+      0 troupes formées
+    </div>
+  </aside>
+  <header>
+    <h1>
+      <img src="/img/clash-of-clans-logo.webp" alt="Logo Clash of Clans">
+    </h1>
+    <p class="description">
+      Construire un village,
+      former un clan et participer à des guerres de clans épiques !
+    </p>
+  </header>
+  <main>
+    <ul class="cartes">
+      <li
+        v-for="laTroupe in troupes"
+        :key="laTroupe.id"
+      >
+        <article>
+          <header
+              :style="`background: linear-gradient(60deg,#3B3B3B 0%, ${ laTroupe.couleur } 100%);`"
+          >
+            <img :src="laTroupe.image" :alt="laTroupe.nom">
+          </header>
+          <div class="level" :style="`color: ${ laTroupe.couleur };`">
+            Niveau {{ laTroupe.niveau }}
+          </div>
+          <h2 class="name">{{ laTroupe.nom }}</h2>
+          <button :style="`background-color: ${ laTroupe.couleur };`"> Former
+            <img src="/img/piece-or.png" alt="Former"></button>
+          <p class="description">{{ laTroupe.description }}</p>
+          <footer>
+            <div class="training"
+                 :style="`background-color: ${ laTroupe.couleur };`">
+              <div>{{ laTroupe.formation }}<sup>sec</sup></div>
+              <div>Formation</div>
+            </div>
+            <div class="speed"
+                 :style="`background-color: ${ laTroupe.couleur };`">
+              <div>{{ laTroupe.vitesse }}</div>
+              <div>Vitesse</div>
+            </div>
+            <div class="cost"
+                 :style="`background-color: ${ laTroupe.couleur };`">
+              <div>{{ laTroupe.cout }}</div>
+              <div>Coût</div>
+            </div>
+          </footer>
+        </article>
+      </li>
+    </ul>
+  </main>
+  <footer>
+    &copy; 2023 - Supercell.com
+  </footer>
 </template>
 
 <style scoped>
