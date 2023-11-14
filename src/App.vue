@@ -1,7 +1,11 @@
 <script setup>
 // Cheat Sheet: https://steve-fallet.notion.site/Vue-3-script-setup-Cheat-Sheet-b12192ceae244ecda65f771579ca02bc
-import {ref} from 'vue'
+import {onMounted, ref} from 'vue'
+import PageFooter from "@/components/PageFooter.vue";
+import PageTopBar from "@/components/PageTopBar.vue";
 
+// Nombre total de pièces d'or
+const totalOr = ref(15789);
 // Tableau des troupes
 const troupes = ref([
   {
@@ -38,19 +42,31 @@ const troupes = ref([
     "image": "https://cocapi.divtec.me/img/geant.png"
   }
 ])
+// Tableau des troupes formées
+const troupesFormees = ref([])
+
+/* Méthodes */
+function formerTroupe(troupe) {
+  if (totalOr.value < troupe.cout) {
+    alert("Vous n'avez pas assez d'or mon seigneur !")
+    return
+  }
+  totalOr.value -= troupe.cout
+  troupesFormees.value.push(troupe)
+}
+
+// Quand le composant est monté, on va chercher les données
+onMounted(() => {
+  fetch('https://cocapi.divtec.me/troupes')
+      .then((res) => res.json())
+      .then((data) => {
+        troupes.value = data
+      })
+})
 </script>
 
 <template>
-  <aside class="solde-or">
-    <div>
-      <img src="/img/piece-or-note.jpg" alt="Solde Or">
-      20 000 pièces d'or
-    </div>
-    <div>
-      <img src="/img/troupes-icon.png" alt="Troupes">
-      0 troupes formées
-    </div>
-  </aside>
+  <PageTopBar :or="totalOr" :nb-troupes-formees="troupesFormees.length" />
   <header>
     <h1>
       <img src="/img/clash-of-clans-logo.webp" alt="Logo Clash of Clans">
@@ -76,8 +92,13 @@ const troupes = ref([
             Niveau {{ laTroupe.niveau }}
           </div>
           <h2 class="name">{{ laTroupe.nom }}</h2>
-          <button :style="`background-color: ${ laTroupe.couleur };`"> Former
-            <img src="/img/piece-or.png" alt="Former"></button>
+          <button
+              :style="`background-color: ${ laTroupe.couleur };`"
+              @click="formerTroupe(laTroupe)"
+          >
+            Former
+            <img src="/img/piece-or.png" alt="Former">
+          </button>
           <p class="description">{{ laTroupe.description }}</p>
           <footer>
             <div class="training"
@@ -100,9 +121,7 @@ const troupes = ref([
       </li>
     </ul>
   </main>
-  <footer>
-    &copy; 2023 - Supercell.com
-  </footer>
+  <PageFooter />
 </template>
 
 <style scoped>
